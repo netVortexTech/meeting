@@ -38,18 +38,28 @@ function initializeSite() {
     const preBtn = $('#startPreMeetingBtn');
     const startNowBtn = $('#startMeetingNowBtn');
 
+    // Flags to prevent multiple sound alerts
+    let preMeetingWarned = false;
+    let meetingWarned = false;
+
     // Start Countdown Button
     preBtn.on('click', () => {
         const inputMins = parseInt(preInput.val());
         if (isNaN(inputMins) || inputMins < 1) return alert("Please enter a valid number of minutes");
 
         preMeetingSeconds = inputMins * 60;
-
         preOptions.hide();
         preTimer.show();
 
         preMeetingInterval = setInterval(() => {
             preTimer.text(formatTime(preMeetingSeconds));
+
+            // 🔊 Pre-meeting warning 10 minutes before meeting starts
+            if (preMeetingSeconds === 600 && !preMeetingWarned) {
+                playSound('preMeetingWarningSound');
+                preMeetingWarned = true;
+            }
+
             preMeetingSeconds--;
 
             if (preMeetingSeconds < 0) {
@@ -57,7 +67,7 @@ function initializeSite() {
                 preTimer.hide();
                 $('#preMeeting').hide();
                 $('#meeting').show();
-                playStartSound();
+                playSound('meetingStartSound');
                 startMeetingTimer();
             }
         }, 1000);
@@ -69,7 +79,7 @@ function initializeSite() {
         preTimer.hide();
         $('#preMeeting').hide();
         $('#meeting').show();
-        playStartSound();
+        playSound('meetingStartSound');
         startMeetingTimer();
     });
 
@@ -87,6 +97,25 @@ function initializeSite() {
             overTime > 0 ? `Time Over: ${formatTime(overTime)}` : `Finished on time.`
         );
     });
+
+    // MEETING TIMER FUNCTION
+    function startMeetingTimer() {
+        const startTime = Date.now();
+        meetingWarned = false;
+
+        meetingInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            meetingSeconds = 3600 - elapsed;
+
+            // 🔊 Meeting ending soon warning (2 minutes left)
+            if (meetingSeconds === 600 && !meetingWarned) {
+                playSound('endMeetingWarningSound');
+                meetingWarned = true;
+            }
+
+            document.getElementById('meetingTimer').innerText = formatTime(meetingSeconds);
+        }, 1000);
+    }
 }
 
 // FORMAT TIME
@@ -102,21 +131,10 @@ function formatTime(seconds) {
 let preMeetingInterval;
 let meetingInterval;
 let preMeetingSeconds = 0;
-let meetingSeconds = 3600; // 60 minutes
+let meetingSeconds = 3600;
 
-// MEETING TIMER
-function startMeetingTimer() {
-    const startTime = Date.now();
-
-    meetingInterval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        meetingSeconds = 3600 - elapsed;
-        document.getElementById('meetingTimer').innerText = formatTime(meetingSeconds);
-    }, 1000);
-}
-
-// PLAY SOUND ALERT
-function playStartSound() {
-    const sound = document.getElementById('meetingStartSound');
+// UNIVERSAL SOUND PLAYER
+function playSound(id) {
+    const sound = document.getElementById(id);
     if (sound) sound.play();
 }
