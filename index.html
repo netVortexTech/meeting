@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>Hilton Meeting Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="favicon.png" rel="shortcut icon" type="image/png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,900" rel="stylesheet" type="text/css">
+    <link href="css/loader.css" rel="stylesheet" type="text/css">
+    <link href="css/normalize.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/ie.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="preloader">
+        <div class="loading">
+            <h2>Meeting</h2>
+            <span class="progress"></span>
+        </div>
+    </div>
+
+<div class="wrapper">
+            <ul class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" id="scene">
+                <li class="layer" data-depth="0.00">
+                </li>
+                <!-- BG -->
+
+                <li class="layer" data-depth="0.10">
+                    <div class="background">
+                    </div>
+                </li>
+
+                <!-- Hero -->
+
+                <li class="layer" data-depth="0.20">
+                    <div class="title">
+                        <h2>
+                            HILTON MEETING TIMER
+                        </h2>
+                        <span class="line"></span>
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.25">
+                    <div class="sphere">
+                        <img alt="sphere" src="images/sphere.png">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.30">
+                    <div class="hero">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.40">
+                    <div class="depth-1 flake1">
+                        <img alt="flake" src="images/flakes/depth1/flakes1.png">
+                    </div>
+
+                    <div class="depth-1 flake2">
+                        <img alt="flake" src="images/flakes/depth1/flakes2.png">
+                    </div>
+
+                    <div class="depth-1 flake3">
+                        <img alt="flake" src="images/flakes/depth1/flakes3.png">
+                    </div>
+
+                    <div class="depth-1 flake4">
+                        <img alt="flake" src="images/flakes/depth1/flakes4.png">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.50">
+                    <div class="depth-2 flake1">
+                        <img alt="flake" src="images/flakes/depth2/flakes1.png">
+                    </div>
+
+                    <div class="depth-2 flake2">
+                        <img alt="flake" src="images/flakes/depth2/flakes2.png">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.60">
+                    <div class="depth-3 flake1">
+                        <img alt="flake" src="images/flakes/depth3/flakes1.png">
+                    </div>
+
+                    <div class="depth-3 flake2">
+                        <img alt="flake" src="images/flakes/depth3/flakes2.png">
+                    </div>
+
+                    <div class="depth-3 flake3">
+                        <img alt="flake" src="images/flakes/depth3/flakes3.png">
+                    </div>
+
+                    <div class="depth-3 flake4">
+                        <img alt="flake" src="images/flakes/depth3/flakes4.png">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="0.80">
+                    <div class="depth-4">
+                        <img alt="flake" src="images/flakes/depth4/flakes.png">
+                    </div>
+                </li>
+
+                <li class="layer" data-depth="1.00">
+                    <div class="depth-5">
+                        <img alt="flake" src="images/flakes/depth5/flakes.png">
+                    </div>
+                </li>
+            </ul>
+
+            <!-- ✅ Timer UI OUTSIDE parallax layers -->
+             <div class="meeting-ui">
+    <div id="preMeeting" class="timer-section">
+        <h4>Select how to start:</h4>
+
+        <div id="preMeetingOptions">
+            <input type="number" id="preMeetingInput" placeholder="e.g. 5" min="1">
+            <button id="startPreMeetingBtn">Start Countdown</button>
+            <button id="startMeetingNowBtn">Start Meeting Now</button>
+        </div>
+
+        <h1 id="preMeetingTimer" class="big-timer" style="display: none;"></h1>
+    </div>
+
+    <div id="meeting" class="timer-section" style="display: none;">
+        <h3>Meeting in Progress</h3>
+        <h1 id="meetingTimer" class="big-timer">60:00</h1>
+        <button id="stopMeetingBtn">Stop Meeting</button>
+    </div>
+
+    <div id="results" class="timer-section" style="display: none;">
+        <h2>Meeting Summary</h2>
+        <p>Total time used: <span id="totalTimeUsed"></span></p>
+        <p id="overTimeDisplay"></p>
+        <button onclick="location.reload()">Home</button>
+    </div>
+</div>
+
+        </div>
+<audio id="meetingStartSound" src="sounds/alert.mp3" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="js/plugins.js"></script> 
+    <script src="js/jquery.countdown.min.js"></script> 
+    <script src="js/main.js"></script>
+</body>
+</html>
