@@ -54,8 +54,8 @@ function initializeSite() {
         preMeetingInterval = setInterval(() => {
             preTimer.text(formatTime(preMeetingSeconds));
 
-            // 🔊 Pre-meeting warning 10 minutes before meeting starts
-            if (preMeetingSeconds === 600 && !preMeetingWarned) {
+            // 🔊 Pre-meeting warning 1 minutes before meeting starts
+            if (preMeetingSeconds === 60 && !preMeetingWarned) {
                 playSound('preMeetingWarningSound');
                 preMeetingWarned = true;
             }
@@ -107,7 +107,7 @@ function initializeSite() {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             meetingSeconds = 3600 - elapsed;
 
-            // 🔊 Meeting ending soon warning (2 minutes left)
+            // 🔊 Meeting ending soon warning (10 minutes left)
             if (meetingSeconds === 600 && !meetingWarned) {
                 playSound('endMeetingWarningSound');
                 meetingWarned = true;
