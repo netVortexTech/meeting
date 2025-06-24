@@ -79,7 +79,7 @@ function initializeSite() {
         preMeetingInterval = setInterval(() => {
             preTimer.text(formatTime(preMeetingSeconds));
 
-            if (preMeetingSeconds === 60 && !preMeetingWarned) {
+            if (preMeetingSeconds === 240 && !preMeetingWarned) {
                 playSound('preMeetingWarningSound');
                 preMeetingWarned = true;
             }
