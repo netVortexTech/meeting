@@ -48,7 +48,7 @@
             <!-- ✅ Timer UI OUTSIDE parallax layers -->
              <div class="meeting-ui">
     <div id="preMeeting" class="timer-section">
-        <h4>Select how to start:</h4>
+        <h4>Countdown Before Meeting:</h4>
 
         <div id="preMeetingOptions">
             <input type="number" id="preMeetingInput" placeholder="e.g. 5" min="1">
@@ -66,7 +66,7 @@
     </div>
 
     <div id="results" class="timer-section" style="display: none;">
-        <h2>Meeting Summary</h2>
+        <h2 style="color: #fff;">Meeting Summary</h2>
         <p>Total time used: <span id="totalTimeUsed"></span></p>
         <p id="overTimeDisplay"></p>
         <button onclick="location.reload()">Home</button>
@@ -75,6 +75,9 @@
 
         </div>
 <audio id="meetingStartSound" src="sounds/alert.mp3" preload="auto"></audio>
+<audio id="preMeetingWarningSound" src="sounds/pre-warning.mp3"></audio>
+<audio id="endMeetingWarningSound" src="sounds/end-warning.mp3"></audio>
+
 
     <!-- Scripts -->
     <script src="js/plugins.js"></script> 
