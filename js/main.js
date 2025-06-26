@@ -44,7 +44,6 @@ function initializeSite() {
     const stopBtn = $('#stopMeetingBtn');
 
     let preMeetingWarned = false;
-    let meetingWarned = false;
 
     // Utility: hide form elements
     function hideInputsAndButtons() {
@@ -79,7 +78,8 @@ function initializeSite() {
         preMeetingInterval = setInterval(() => {
             preTimer.text(formatTime(preMeetingSeconds));
 
-            if (preMeetingSeconds === 240 && !preMeetingWarned) {
+            // Play sound 5 minutes before pre-meeting ends
+            if (preMeetingSeconds === 300 && !preMeetingWarned) {
                 playSound('preMeetingWarningSound');
                 preMeetingWarned = true;
             }
@@ -92,8 +92,7 @@ function initializeSite() {
                 preTimer.hide();
                 preMeetingSection.hide();
                 meetingSection.show();
-                playSound('meetingStartSound');
-                startMeetingTimer();
+                startMeetingTimer(); // Start the meeting timer without a sound
             }
         }, 1000);
     });
@@ -112,8 +111,7 @@ function initializeSite() {
         preMeetingSection.hide();
         meetingSection.show();
 
-        playSound('meetingStartSound');
-        startMeetingTimer();
+        startMeetingTimer(); // Start the meeting timer without a sound
     });
 
     // Stop Meeting
@@ -134,19 +132,22 @@ function initializeSite() {
     // Meeting Timer Logic
     function startMeetingTimer() {
         const startTime = Date.now();
-        meetingWarned = false;
+        let warningFifteenMinutes = false;
 
         meetingInterval = setInterval(() => {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             meetingSeconds = originalMeetingDuration - elapsed;
 
-            if (meetingSeconds === 120 && !meetingWarned) {
+            // Play sound 15 minutes before meeting ends
+            if (meetingSeconds === 900 && !warningFifteenMinutes) {
                 playSound('endMeetingWarningSound');
-                meetingWarned = true;
+                warningFifteenMinutes = true;
             }
 
+            // Play sound when meeting ends
             if (meetingSeconds <= 0) {
                 clearInterval(meetingInterval);
+                playSound('meetingEndSound');
                 $('#stopMeetingBtn').click(); // auto-end meeting
             }
 
