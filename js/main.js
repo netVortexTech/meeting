@@ -11,6 +11,8 @@ let meetingInterval;
 let preMeetingSeconds = 0;
 let meetingSeconds = 3600;
 let originalMeetingDuration = 3600;
+let meetingStartTimestamp;
+let overtimeStarted = false;
 
 function initializeSite() {
     "use strict";
@@ -43,6 +45,8 @@ function initializeSite() {
     const preMeetingSection = $('#preMeeting');
     const stopBtn = $('#stopMeetingBtn');
     const preMeetingControls = $('#preMeetingControls');
+    const overtimeLabel = $('#overtimeLabel');
+    const overtimeTimer = $('#overtimeTimer');
 
     let preMeetingWarned = false;
 
@@ -78,7 +82,6 @@ function initializeSite() {
         preMeetingInterval = setInterval(() => {
             preTimer.text(formatTime(preMeetingSeconds));
 
-            // Play sound 5 minutes before pre-meeting ends
             if (preMeetingSeconds === 300 && !preMeetingWarned) {
                 playSound('preMeetingWarningSound');
                 preMeetingWarned = true;
@@ -98,7 +101,7 @@ function initializeSite() {
         }, 1000);
     });
 
-    // Start Meeting Immediately (from home page)
+    // Start Meeting Immediately
     startNowBtn.on('click', () => {
         const meetingHrs = parseInt(meetingHoursInput.val()) || 0;
         const meetingMins = parseInt(meetingMinutesInput.val()) || 0;
@@ -116,7 +119,7 @@ function initializeSite() {
         startMeetingTimer();
     });
 
-    // Start Meeting from Pre-Meeting Countdown
+    // Start Meeting From Pre-Meeting Countdown
     $(document).on('click', '#startMeetingFromPreBtn', () => {
         clearInterval(preMeetingInterval);
         $('#preMeetingTitle').remove();
@@ -130,16 +133,19 @@ function initializeSite() {
     // Cancel Pre-Meeting Countdown
     $(document).on('click', '#cancelPreMeetingBtn', () => {
         clearInterval(preMeetingInterval);
-        location.reload(); // go back to home state
+        location.reload();
     });
 
-    // Stop Meeting
+    // Stop Meeting Button
     stopBtn.on('click', () => {
         clearInterval(meetingInterval);
         meetingSection.hide();
         $('#results').show();
+        $('#overtimeLabel').hide();
+        $('#overtimeTimer').hide();
 
-        const totalUsed = originalMeetingDuration - meetingSeconds;
+        const now = Date.now();
+        const totalUsed = Math.floor((now - meetingStartTimestamp) / 1000);
         const overTime = totalUsed > originalMeetingDuration ? totalUsed - originalMeetingDuration : 0;
 
         $('#totalTimeUsed').text(formatTime(totalUsed));
@@ -148,32 +154,41 @@ function initializeSite() {
         );
     });
 
-    // Meeting Timer
+    // Start Meeting Timer
     function startMeetingTimer() {
-        const startTime = Date.now();
+        meetingStartTimestamp = Date.now();
         let warningFifteenMinutes = false;
+        overtimeStarted = false;
 
         meetingInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const elapsed = Math.floor((Date.now() - meetingStartTimestamp) / 1000);
             meetingSeconds = originalMeetingDuration - elapsed;
 
+            // 15 min warning
             if (meetingSeconds === 900 && !warningFifteenMinutes) {
                 playSound('endMeetingWarningSound');
                 warningFifteenMinutes = true;
             }
 
+            // Overtime countdown
             if (meetingSeconds <= 0) {
-                clearInterval(meetingInterval);
-                playSound('meetingEndSound');
-                $('#stopMeetingBtn').click();
+                if (!overtimeStarted) {
+                    playSound('meetingEndSound');
+                    overtimeLabel.show();
+                    overtimeTimer.show();
+                    overtimeStarted = true;
+                }
+
+                const overtimeElapsed = Math.abs(meetingSeconds);
+                overtimeTimer.text(`-${formatTime(overtimeElapsed)}`);
             }
 
-            $('#meetingTimer').text(formatTime(meetingSeconds));
+            $('#meetingTimer').text(formatTime(Math.max(meetingSeconds, 0)));
         }, 1000);
     }
 }
 
-// Format Time
+// Format time as hh:mm:ss
 function formatTime(seconds) {
     const sign = seconds < 0 ? '-' : '';
     seconds = Math.abs(seconds);
@@ -183,7 +198,7 @@ function formatTime(seconds) {
     return `${sign}${h}:${m}:${s}`;
 }
 
-// Play Sound by ID
+// Play sound by ID
 function playSound(id) {
     const sound = document.getElementById(id);
     if (sound) {
