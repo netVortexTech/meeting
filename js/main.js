@@ -42,10 +42,10 @@ function initializeSite() {
     const meetingSection = $('#meeting');
     const preMeetingSection = $('#preMeeting');
     const stopBtn = $('#stopMeetingBtn');
+    const preMeetingControls = $('#preMeetingControls');
 
     let preMeetingWarned = false;
 
-    // Utility: hide form elements
     function hideInputsAndButtons() {
         $('#preMeetingInput').hide();
         $('#meetingHours').hide();
@@ -72,7 +72,7 @@ function initializeSite() {
 
         hideInputsAndButtons();
         preTimer.show().before('<h2 style="color:white;" id="preMeetingTitle">Countdown Before Meeting</h2>');
-
+        preMeetingControls.show();
         preMeetingWarned = false;
 
         preMeetingInterval = setInterval(() => {
@@ -90,14 +90,15 @@ function initializeSite() {
                 clearInterval(preMeetingInterval);
                 $('#preMeetingTitle').remove();
                 preTimer.hide();
+                preMeetingControls.hide();
                 preMeetingSection.hide();
                 meetingSection.show();
-                startMeetingTimer(); // Start the meeting timer without a sound
+                startMeetingTimer();
             }
         }, 1000);
     });
 
-    // Start Meeting Now (no countdown)
+    // Start Meeting Immediately (from home page)
     startNowBtn.on('click', () => {
         const meetingHrs = parseInt(meetingHoursInput.val()) || 0;
         const meetingMins = parseInt(meetingMinutesInput.val()) || 0;
@@ -108,10 +109,28 @@ function initializeSite() {
         hideInputsAndButtons();
         $('#preMeetingTitle').remove();
         $('#preMeetingTimer').hide();
+        preMeetingControls.hide();
         preMeetingSection.hide();
         meetingSection.show();
 
-        startMeetingTimer(); // Start the meeting timer without a sound
+        startMeetingTimer();
+    });
+
+    // Start Meeting from Pre-Meeting Countdown
+    $(document).on('click', '#startMeetingFromPreBtn', () => {
+        clearInterval(preMeetingInterval);
+        $('#preMeetingTitle').remove();
+        preTimer.hide();
+        preMeetingControls.hide();
+        preMeetingSection.hide();
+        meetingSection.show();
+        startMeetingTimer();
+    });
+
+    // Cancel Pre-Meeting Countdown
+    $(document).on('click', '#cancelPreMeetingBtn', () => {
+        clearInterval(preMeetingInterval);
+        location.reload(); // go back to home state
     });
 
     // Stop Meeting
@@ -129,7 +148,7 @@ function initializeSite() {
         );
     });
 
-    // Meeting Timer Logic
+    // Meeting Timer
     function startMeetingTimer() {
         const startTime = Date.now();
         let warningFifteenMinutes = false;
@@ -138,17 +157,15 @@ function initializeSite() {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
             meetingSeconds = originalMeetingDuration - elapsed;
 
-            // Play sound 15 minutes before meeting ends
             if (meetingSeconds === 900 && !warningFifteenMinutes) {
                 playSound('endMeetingWarningSound');
                 warningFifteenMinutes = true;
             }
 
-            // Play sound when meeting ends
             if (meetingSeconds <= 0) {
                 clearInterval(meetingInterval);
                 playSound('meetingEndSound');
-                $('#stopMeetingBtn').click(); // auto-end meeting
+                $('#stopMeetingBtn').click();
             }
 
             $('#meetingTimer').text(formatTime(meetingSeconds));
@@ -156,7 +173,7 @@ function initializeSite() {
     }
 }
 
-// Format time as hh:mm:ss
+// Format Time
 function formatTime(seconds) {
     const sign = seconds < 0 ? '-' : '';
     seconds = Math.abs(seconds);
@@ -166,7 +183,7 @@ function formatTime(seconds) {
     return `${sign}${h}:${m}:${s}`;
 }
 
-// Play a sound by ID
+// Play Sound by ID
 function playSound(id) {
     const sound = document.getElementById(id);
     if (sound) {
