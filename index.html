@@ -23,74 +23,75 @@
         </div>
     </div>
 
-<div class="wrapper">
-            <ul class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" id="scene">
-                <li class="layer" data-depth="0.00">
-                </li>
-                <!-- BG -->
+    <div class="wrapper">
+        <ul class="scene unselectable" data-friction-x="0.1" data-friction-y="0.1" data-scalar-x="25" data-scalar-y="15" id="scene">
+            <li class="layer" data-depth="0.00"></li>
 
-                <li class="layer" data-depth="0.10">
-                    <div class="background">
-                    </div>
-                </li>
+            <!-- BG -->
+            <li class="layer" data-depth="0.10">
+                <div class="background"></div>
+            </li>
 
-                <!-- Hero -->
+            <!-- Hero -->
+            <li class="layer" data-depth="0.20">
+                <div class="title">
+                    <h2 style="color: #fff; font-size: xxx-large;">HILTON MEETING TIMER</h2>
+                </div>
+            </li>
+        </ul>
 
-                <li class="layer" data-depth="0.20">
-                    <div class="title">
-                        <h2 style="color: #fff; font-size:xxx-large; ">
-                            HILTON MEETING TIMER
-                        </h2>
-                    </div>
-                </li>
-            </ul>
+        <!-- ✅ Timer UI OUTSIDE parallax layers -->
+        <div class="meeting-ui">
+            <div id="preMeeting" class="timer-section">
+                <!-- Countdown Before Meeting Input -->
+                <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 20px;">
+                    <label for="preMeetingInput" style="color: white; white-space: nowrap;">Countdown Before Meeting</label>
+                    <input type="number" id="preMeetingInput" placeholder=" minutes e.g. 5" min="1" style="width: 100%; max-width: 600px;">
+                </div>
 
-            <!-- ✅ Timer UI OUTSIDE parallax layers -->
-            <div class="meeting-ui">
-    <div id="preMeeting" class="timer-section">
-        <!-- Countdown Before Meeting (Horizontal Alignment) -->
-        <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 20px;">
-            <label for="preMeetingInput" style="color: white; white-space: nowrap;">Countdown Before Meeting</label>
-            <input type="number" id="preMeetingInput" placeholder=" minutes e.g. 5" min="1" style="width: 100%; max-width: 600px;">
+                <!-- Meeting Duration Input -->
+                <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 20px;">
+                    <label style="color: white; white-space: nowrap;">The Entire Meeting Duration</label>
+                    <input type="number" id="meetingHours" placeholder="hrs" min="0" style="width: 100px; margin-right: 10px;">
+                    <input type="number" id="meetingMinutes" placeholder="min" min="0" style="width: 100px;">
+                </div>
+
+                <!-- Initial Buttons -->
+                <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
+                    <button id="startPreMeetingBtn" class="custom-button">Start Pre-meeting</button>
+                    <button id="startMeetingNowBtn" class="custom-button">Start Meeting</button>
+                </div>
+
+                <!-- Timer -->
+                <h1 id="preMeetingTimer" class="big-timer" style="display: none;"></h1>
+
+                <!-- New Buttons (initially hidden, shown during countdown) -->
+                <div id="preMeetingControls" style="margin-top: 30px; display: none; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                    <button id="startMeetingFromPreBtn" class="custom-button">Start Meeting Now</button>
+                    <button id="cancelPreMeetingBtn" class="custom-button" style="background-color: red; color: white;">Stop Countdown</button>
+                </div>
+            </div>
+
+            <div id="meeting" class="timer-section" style="display: none;">
+                <h3>Meeting in Progress</h3>
+                <h1 id="meetingTimer" class="big-timer">00:00:00</h1>
+                <button id="stopMeetingBtn">Stop Meeting</button>
+            </div>
+
+            <div id="results" class="timer-section" style="display: none;">
+                <h2 style="color: #fff;">Meeting Summary</h2>
+                <p>Total time used: <span id="totalTimeUsed"></span></p>
+                <p id="overTimeDisplay"></p>
+                <button onclick="location.reload()">Home</button>
+            </div>
         </div>
-
-        <!-- Meeting Duration (Horizontal Alignment) -->
-        <div style="margin-bottom: 2rem; display: flex; align-items: center; gap: 20px;">
-            <label style="color: white; white-space: nowrap;">The Entire Meeting Duration</label>
-            <input type="number" id="meetingHours" placeholder="hrs" min="0" style="width: 100px; margin-right: 10px;">
-            <input type="number" id="meetingMinutes" placeholder="min" min="0" style="width: 100px;">
-        </div>
-
-        <!-- Buttons -->
-        <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
-            <button id="startPreMeetingBtn" class="custom-button">Start Pre-meeting</button>
-            <button id="startMeetingNowBtn" class="custom-button">Start Meeting</button>
-        </div>
-
-        <!-- Timer -->
-        <h1 id="preMeetingTimer" class="big-timer" style="display: none;"></h1>
     </div>
 
-    <div id="meeting" class="timer-section" style="display: none;">
-        <h3>Meeting in Progress</h3>
-        <h1 id="meetingTimer" class="big-timer">00:00:00</h1>
-        <button id="stopMeetingBtn">Stop Meeting</button>
-    </div>
-
-    <div id="results" class="timer-section" style="display: none;">
-        <h2 style="color: #fff;">Meeting Summary</h2>
-        <p>Total time used: <span id="totalTimeUsed"></span></p>
-        <p id="overTimeDisplay"></p>
-        <button onclick="location.reload()">Home</button>
-    </div>
-</div>
-</div>
-<audio id="meetingStartSound" src="sounds/alert.mp3" preload="auto"></audio>
-<audio id="preMeetingWarningSound" src="sounds/pre-warning.mp3" preload="auto"></audio>
-<audio id="endMeetingWarningSound" src="sounds/end-warning.mp3" preload="auto"></audio>
-<audio id="meetingEndSound" src="sounds/meeting-end.mp3" preload="auto"></audio>
-
-
+    <!-- Audio Alerts -->
+    <audio id="meetingStartSound" src="sounds/alert.mp3" preload="auto"></audio>
+    <audio id="preMeetingWarningSound" src="sounds/pre-warning.mp3" preload="auto"></audio>
+    <audio id="endMeetingWarningSound" src="sounds/end-warning.mp3" preload="auto"></audio>
+    <audio id="meetingEndSound" src="sounds/meeting-end.mp3" preload="auto"></audio>
 
     <!-- Scripts -->
     <script src="js/plugins.js"></script> 
